@@ -1,8 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
-
-const uint32_t I2C_Freq = 4000000UL;  // I2C 周波数
-const uint32_t I2C_Normal = 100000UL; // I2C 周波数
+faf const uint32_t I2C_Freq = 4000000UL; // I2C 周波数
+const uint32_t I2C_Normal = 100000UL;    // I2C 周波数
 
 // GPIO I2C Setting
 const uint8_t I2C_SCL = 21; // GPIO21
