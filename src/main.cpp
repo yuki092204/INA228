@@ -161,27 +161,27 @@ void setup()
   display.println(" display under here.");
 
   // レジスタ値の確認用
-  display.print("%04x", INA226_read(INA226_CONFIG));
+  display.print(INA226_read(INA226_CONFIG));
   display.print(" ");
-  display.print("%04x", INA226_read(INA226_SHUNTV));
+  display.print(INA226_read(INA226_SHUNTV));
   display.print(" ");
-  display.print("%04x", INA226_read(INA226_BUSV));
+  display.print(INA226_read(INA226_BUSV));
   display.print(" ");
-  display.print("%04x", INA226_read(INA226_POWER));
+  display.print(INA226_read(INA226_POWER));
   display.println("");
 
-  display.printf("%04x", INA226_read(INA226_CURRENT));
+  display.print(INA226_read(INA226_CURRENT));
   display.print(" ");
-  display.printf("%04x", INA226_read(INA226_CALIB));
+  display.print(INA226_read(INA226_CALIB));
   display.print(" ");
-  display.printf("%04x", INA226_read(INA226_MASK));
+  display.print(INA226_read(INA226_MASK));
   display.print(" ");
-  display.printf("%04x", INA226_read(INA226_ALERTL));
+  display.print(INA226_read(INA226_ALERTL));
   display.println("");
 
-  display.printf("%04x", INA226_read(INA226_MANU_ID));
+  display.print(INA226_read(INA226_MANU_ID));
   display.print(" ");
-  display.printf("%04x", INA226_read(INA226_DIE_ID));
+  display.print(INA226_read(INA226_DIE_ID));
   display.print(" ");
 
   display.display();
