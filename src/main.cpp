@@ -5,15 +5,15 @@ const uint32_t I2C_Freq = 4000000UL;  // I2C 周波数
 const uint32_t I2C_Normal = 100000UL; // I2C 周波数
 
 // GPIO I2C Setting
-const uint8_t I2C_SCL = 21; // SCL 22
-const uint8_t I2C_SDA = 20; // SDA 21
+const uint8_t I2C_SCL = 21; // GPIO21
+const uint8_t I2C_SDA = 20; // GPIO20
 
 const uint8_t ADDRES_OLED = 0x3C;
 const uint8_t ADDRES_INA226 = 0x40;
 
 // -------------------------------------------------------------------------------
 //	シャント抵抗値
-const uint8_t ShuntR = 100; // 単位はmohm（ミリオーム）
+const uint8_t ShuntR = 2; // 単位はmohm（ミリオーム）
 // -------------------------------------------------------------------------------
 //	INA226 レジスター値
 //	コンフィグ設定値は16bit値らしいので2byteに揃える
@@ -39,19 +39,19 @@ const uint16_t INA226_CONFIG_MODE = 0x0007U; // default:Shuntand Bus,Continuous@
 // ---------------------------------------------------
 // 01h ShuntVoltageRegister (ReadOnly)
 //	0h と出るけど固定 8000 (1F40h)
-const uint8_t INA226_SHUNTV = 0x01;
+const uint32_t INA226_SHUNTV = 0x04;
 // ---------------------------------------------------
 // 02h Bus VoltageRegister (ReadOnly)
 //	0h と出るけど固定 1.25mV / bit = 9584 (2570h)
-const uint8_t INA226_BUSV = 0x02;
+const uint32_t INA226_BUSV = 0x05;
 // ---------------------------------------------------
 // 03h PowerRegister (ReadOnly)
 //	0h と出るけど固定 Power = CurrentRegister * VoltageRegister / 20000 = 4792 (12B8h)
-const uint8_t INA226_POWER = 0x03;
+const uint32_t INA226_POWER = 0x08;
 // ---------------------------------------------------
 // 04h CurrentRegister (ReadOnly)
 //	0h と出るけど固定 10000 (2710h)
-const uint8_t INA226_CURRENT = 0x04;
+const uint32_t INA226_CURRENT = 0x07;
 // ---------------------------------------------------0.000002
 // 05h CalibrationRegister
 //	default 2560 (A00h)
@@ -69,10 +69,10 @@ const uint8_t INA226_MASK = 0x06;
 const uint8_t INA226_ALERTL = 0x07;
 // ---------------------------------------------------
 // FEh ManufacturerID Register (ReadOnly)
-const uint8_t INA226_MANU_ID = 0x08;
+const uint16_t INA226_MANU_ID = 0x3E;
 // ---------------------------------------------------
 // FFh Die ID Register (ReadOnly)
-const uint8_t INA226_DIE_ID = 0xff;
+const uint16_t INA226_DIE_ID = 0x3F;
 // ---------------------------------------------------
 
 // -------------------------------------------------------------------------------
@@ -99,9 +99,9 @@ void INA226_write(uint8_t reg, uint16_t val)
 }
 
 // 読み込み
-uint16_t INA226_read(uint8_t reg)
+uint32_t INA226_read(uint8_t reg)
 {
-  uint16_t ret = 0;
+  uint32_t ret = 0;
   // リクエストするレジスタをコール
   Wire.beginTransmission(ADDRES_INA226);
   Wire.write(reg);
@@ -204,11 +204,11 @@ void loop()
 {
   float shuntVoltage;
   float shuntCurrentAmps;
-  int16_t busVoltage;
-  int16_t currentAmps;
+  int32_t busVoltage;
+  int32_t currentAmps;
 
-  shuntVoltage = INA226_read(INA226_SHUNTV) * 2.5; // 2.5 : ShuntLSB unit 2.5uV to cf
-  shuntCurrentAmps = shuntVoltage / ShuntR;        // mA
+  shuntVoltage = INA226_read(INA226_SHUNTV) * 0.15625; // 2.5 : ShuntLSB unit 2.5uV to cf
+  shuntCurrentAmps = shuntVoltage / ShuntR;            // mA
 
   busVoltage = INA226_read(INA226_BUSV) * 1.25; // 1.25 : BusLSB unit 1.25mV to cf
   currentAmps = INA226_read(INA226_CURRENT);    // mA
