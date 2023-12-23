@@ -21,7 +21,7 @@ const uint8_t ShuntR = 2; // 単位はmohm（ミリオーム）
 // ---------------------------------------------------
 // 00h ConfigurationRegister
 //	default : 0B:01000001 00100111 0x:4127h
-const uint8_t INA226_CONFIG = 0x00;
+const uint16_t INA226_CONFIG = 0x00;
 // -----------------------------------------------
 // AVGBit Settings 平均値モードのサンプル数 D11-D9 << 9
 // const uint16_t INA226_CONFIG_AVG = 0x0000U; // default 1@000  128@100 MAX:1024@111
@@ -43,15 +43,15 @@ const uint32_t INA226_SHUNTV = 0x04;
 // ---------------------------------------------------
 // 02h Bus VoltageRegister (ReadOnly)
 //	0h と出るけど固定 1.25mV / bit = 9584 (2570h)
-const uint32_t INA226_BUSV = 0x05;
+const uint8_t INA226_BUSV = 0x05;
 // ---------------------------------------------------
 // 03h PowerRegister (ReadOnly)
 //	0h と出るけど固定 Power = CurrentRegister * VoltageRegister / 20000 = 4792 (12B8h)
-const uint32_t INA226_POWER = 0x08;
+const uint8_t INA226_POWER = 0x08;
 // ---------------------------------------------------
 // 04h CurrentRegister (ReadOnly)
 //	0h と出るけど固定 10000 (2710h)
-const uint32_t INA226_CURRENT = 0x07;
+const uint8_t INA226_CURRENT = 0x07;
 // ---------------------------------------------------0.000002
 // 05h CalibrationRegister
 //	default 2560 (A00h)
