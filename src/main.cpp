@@ -287,12 +287,12 @@ void loop()
   display.println(" mA");
 
   display.display();*/
-  /*Serial.print("BusVoltage: ");
+  Serial.print("BusVoltage: ");
   Serial.print(busVoltage);
   Serial.println(" mV");
   Serial.print("CurrentAmps: ");
-  Serial.print(currentAmps);*/
-  Serial.println(9);
+  Serial.print(currentAmps);
+  Serial.println(" mA");
 
   delay(333);
 }
