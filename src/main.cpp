@@ -292,7 +292,7 @@ void loop()
   Serial.println(" mV");
   Serial.print("CurrentAmps: ");
   Serial.print(currentAmps);*/
-  Serial.println(" mA");
+  Serial.println(" 9");
 
   delay(333);
 }
