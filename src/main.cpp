@@ -33,7 +33,7 @@ const uint16_t INA228_CONFIG_CONVDLY = 0x00U;
 
 const uint16_t INA228_CONFIG_TEMPCOMP = 0x00U;
 
-const uint16_t INA228_CONFIG_ADCRANCGE = 0x01U;
+const uint16_t INA228_CONFIG_ADCRANCGE = 0x01U; // 0:40.96mV 1:10.24mV
 
 const uint16_t INA228_CONFIG_RESERVED = 0x00U;
 // -----------------------------------------------
