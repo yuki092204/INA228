@@ -19,8 +19,7 @@ const uint8_t ShuntR = 2; // 単位はmohm（ミリオーム）
 //	INA228 レジスター値
 //	コンフィグ設定値は16bit値らしいので2byteに揃える
 
-// 00h ConfigurationRegister
-//	default : 0B:00000000 00000000 0x:0h
+// Configuration (CONFIG) Register (Address = 0h) [reset = 0h]
 const uint16_t INA228_CONFIG = 0x00U;
 
 /*Reset Bit. Setting this bit to '1' generates a system reset that is the
@@ -54,6 +53,7 @@ const uint16_t INA228_CONFIG_ADCRANCGE = 0x01U;
 
 // Reserved. Always reads 0.
 const uint16_t INA228_CONFIG_RESERVED = 0x00U;
+
 // -----------------------------------------------
 // AVGBit Settings 平均値モードのサンプル数 D11-D9 << 9
 // const uint16_t INA226_CONFIG_AVG = 0x0000U; // default 1@000  128@100 MAX:1024@111
@@ -67,6 +67,8 @@ const uint16_t INA228_CONFIG_RESERVED = 0x00U;
 // ModeSettings 動作モード D2-D0 << 0
 // const uint16_t INA226_CONFIG_MODE = 0x0007U; // default:Shuntand Bus,Continuous@111
 // -----------------------------------------------
+
+// ADC Configuration (ADC_CONFIG) Register (Address = 1h) [reset = FB68h]
 const uint16_t INA228_ADC_CONFIG = 0x01;
 
 const uint16_t INA228_ADC_CONFIG_MODE = 0x000FU;
@@ -81,45 +83,19 @@ const uint16_t INA228_ADC_CONFIG_AVG = 0x0002U;
 
 const uint16_t INA228_SHUNT_CAL = 0x02;
 
-// ---------------------------------------------------
-// 01h ShuntVoltageRegister (ReadOnly)
-//	0h と出るけど固定 8000 (1F40h)
 const uint32_t INA228_VSHUNT = 0x04;
-// ---------------------------------------------------
-// 02h Bus VoltageRegister (ReadOnly)
-//	0h と出るけど固定 1.25mV / bit = 9584 (2570h)
+
 const uint8_t INA228_VBUS = 0x05;
 
 const uint16_t INA228_DIETEMP = 0x06;
 
 const uint32_t INA228_CURRENT = 0x07;
-// ---------------------------------------------------
-// 03h PowerRegister (ReadOnly)
-//	0h と出るけど固定 Power = CurrentRegister * VoltageRegister / 20000 = 4792 (12B8h)
+
 const uint32_t INA228_POWER = 0x08;
-// ---------------------------------------------------
-// 04h CurrentRegister (ReadOnly)
-//	0h と出るけど固定 10000 (2710h)
-// const uint8_t INA226_CURRENT = 0x07;
-// ---------------------------------------------------
-// FEh ManufacturerID Register (ReadOnly)
+
 const uint16_t INA228_MANU_ID = 0x3E;
-// ---------------------------------------------------
-// FFh Die ID Register (ReadOnly)
+
 const uint16_t INA228_DIE_ID = 0x3F;
-// ---------------------------------------------------
-
-// -------------------------------------------------------------------------------
-// #include <Adafruit_GFX.h>
-// #include <Adafruit_SSD1306.h>
-
-// const uint8_t SCREEN_WIDTH = 128; // OLED display width, in pixels
-// const uint8_t SCREEN_HEIGHT = 64; // OLED display width, in pixels
-//  Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-// const int8_t OLED_RESET = -1;
-
-// Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET, I2C_Freq, I2C_Normal);
-//  -------------------------------------------------------------------------------
 
 // レジスタ書き込み関数
 void INA228_write(uint8_t reg, uint16_t val)
