@@ -10,14 +10,15 @@ const uint32_t I2C_Normal = 100000UL; // I2C 周波数
 const uint8_t I2C_SCL = 21; // GPIO21
 const uint8_t I2C_SDA = 20; // GPIO20
 
-const uint8_t ADDRES_OLED = 0x3C;
+// INA228 I2C Address　本体の設定によって変わる
 const uint8_t ADDRES_INA228 = 0x40;
 
 //	シャント抵抗値
 const uint8_t ShuntR = 2; // 単位はmohm（ミリオーム）
 
-//	INA228 レジスター値
+//	以下　INA228 レジスター値の設定
 //	コンフィグ設定値は16bit値らしいので2byteに揃える
+// https://strawberry-linux.com/pub/ina228.pdf (INA228のデータシート）を参照
 
 // Configuration (CONFIG) Register (Address = 0h) [reset = 0h]
 const uint16_t INA228_CONFIG = 0x00U;
@@ -162,7 +163,7 @@ void INA228_write(uint8_t reg, uint16_t val)
   Wire.endTransmission();
 }
 
-// 読み込み　2byte
+// レジスタ読み込み関数　2byte ver
 uint32_t INA228_read_2byte(uint8_t reg)
 {
   uint32_t ret = 0;
@@ -182,7 +183,7 @@ uint32_t INA228_read_2byte(uint8_t reg)
   return ret;
 }
 
-// 読み込み　3byte
+// レジスタ読み込み関数　3byte ver
 uint32_t INA228_read_3byte(uint8_t reg)
 {
   uint32_t ret = 0;
@@ -199,7 +200,7 @@ uint32_t INA228_read_3byte(uint8_t reg)
     //	2回目以降は下位ビットを上位にずらして、新しく来たものを下位ビットに埋める
     ret = (ret << 8) | Wire.read();
   }
-  ret = ret >> 4;
+  ret = ret >> 4; // 24bitのデータを20bitに変換(下位4bitは不要)
   return ret;
 }
 
