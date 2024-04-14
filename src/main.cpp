@@ -127,20 +127,28 @@ completed.
 */
 const uint16_t INA228_ADC_CONFIG_AVG = 0x0002U;
 
+// Shunt Calibration (SHUNT_CAL) Register (Address = 2h) [reset = 1000h]
 const uint16_t INA228_SHUNT_CAL = 0x02;
 
+// Shunt Voltage Measurement (VSHUNT) Register (Address = 4h) [reset = 0h]
 const uint32_t INA228_VSHUNT = 0x04;
 
+// Bus Voltage Measurement (VBUS) Register (Address = 5h) [reset = 0h]
 const uint8_t INA228_VBUS = 0x05;
 
+// Temperature Measurement (DIETEMP) Register (Address = 6h) [reset = 0h]
 const uint16_t INA228_DIETEMP = 0x06;
 
+// Current Result (CURRENT) Register (Address = 7h) [reset = 0h]
 const uint32_t INA228_CURRENT = 0x07;
 
+// Power Result (POWER) Register (Address = 8h) [reset = 0h]
 const uint32_t INA228_POWER = 0x08;
 
+// Manufacturer ID (MANUFACTURER_ID) Register (Address = 3Eh) [reset = 5449h]
 const uint16_t INA228_MANU_ID = 0x3E;
 
+// Device ID (DEVICE_ID) Register (Address = 3Fh) [reset = 2280h]
 const uint16_t INA228_DIE_ID = 0x3F;
 
 // レジスタ書き込み関数
