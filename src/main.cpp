@@ -54,31 +54,77 @@ const uint16_t INA228_CONFIG_ADCRANCGE = 0x01U;
 // Reserved. Always reads 0.
 const uint16_t INA228_CONFIG_RESERVED = 0x00U;
 
-// -----------------------------------------------
-// AVGBit Settings 平均値モードのサンプル数 D11-D9 << 9
-// const uint16_t INA226_CONFIG_AVG = 0x0000U; // default 1@000  128@100 MAX:1024@111
-// const uint16_t INA228_CONFIG_AVG = 0x0002U; // 16回計測の平均
-// Bus VoltageConversionTime 電圧測定間隔 D8-D6  << 6
-// const uint16_t INA226_CONFIG_VCT = 0x0004U; // default:1.1ms@100
-// const uint16_t INA226_CONFIG_VCT = 0x0002U; // 16回計測するので332 μsに変更
-// ShuntVoltageConversionTime シャント抵抗電圧測定間隔 D5-D3 << 3
-// const uint16_t INA226_CONFIG_SVCT = 0x0004U; // default:1.1ms@100
-// const uint16_t INA226_CONFIG_SVCT = 0x0002U; // 16回計測するので332 μsに変更
-// ModeSettings 動作モード D2-D0 << 0
-// const uint16_t INA226_CONFIG_MODE = 0x0007U; // default:Shuntand Bus,Continuous@111
-// -----------------------------------------------
-
 // ADC Configuration (ADC_CONFIG) Register (Address = 1h) [reset = FB68h]
 const uint16_t INA228_ADC_CONFIG = 0x01;
 
+/*The user can set the MODE bits for continuous or triggered mode on
+bus voltage, shunt voltage or temperature measurement.
+0h = Shutdown
+1h = Triggered bus voltage, single shot
+2h = Triggered shunt voltage triggered, single shot
+3h = Triggered shunt voltage and bus voltage, single shot
+4h = Triggered temperature, single shot
+5h = Triggered temperature and bus voltage, single shot
+6h = Triggered temperature and shunt voltage, single shot
+7h = Triggered bus voltage, shunt voltage and temperature, single
+shot
+8h = Shutdown
+9h = Continuous bus voltage only
+Ah = Continuous shunt voltage only
+Bh = Continuous shunt and bus voltage
+Ch = Continuous temperature only
+Dh = Continuous bus voltage and temperature
+Eh = Continuous temperature and shunt voltage
+Fh = Continuous bus, shunt voltage and temperature*/
 const uint16_t INA228_ADC_CONFIG_MODE = 0x000FU;
 
+/*Sets the conversion time of the bus voltage measurement:
+0h = 50 µs
+1h = 84 µs
+2h = 150 µs
+3h = 280 µs
+4h = 540 µs
+5h = 1052 µs
+6h = 2074 µs
+7h = 4120 µs*/
 const uint16_t INA228_ADC_CONFIG_VBUSCT = 0x0005U;
 
+/*Sets the conversion time of the shunt voltage measurement:
+0h = 50 µs
+1h = 84 µs
+2h = 150 µs
+3h = 280 µs
+4h = 540 µs
+5h = 1052 µs
+6h = 2074 µs
+7h = 4120 µs*/
 const uint16_t INA228_ADC_CONFIG_VSHCT = 0x0005U;
 
+/*Sets the conversion time of the temperature measurement:
+0h = 50 µs
+1h = 84 µs
+2h = 150 µs
+3h = 280 µs
+4h = 540 µs
+5h = 1052 µs
+6h = 2074 µs
+7h = 4120 µs
+*/
 const uint16_t INA228_ADC_CONFIG_VTCT = 0x0005U;
 
+/*Selects ADC sample averaging count. The averaging setting applies
+to all active inputs.
+When >0h, the output registers are updated after the averaging has
+completed.
+0h = 1
+1h = 4
+2h = 16
+3h = 64
+4h = 128
+5h = 256
+6h = 512
+7h = 1024
+*/
 const uint16_t INA228_ADC_CONFIG_AVG = 0x0002U;
 
 const uint16_t INA228_SHUNT_CAL = 0x02;
