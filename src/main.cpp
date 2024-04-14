@@ -29,7 +29,7 @@ const uint16_t INA228_CONFIG_RESET = 0x00U; // Reset
 
 const uint16_t INA228_CONFIG_RSTACC = 0x00U;
 
-const uint16_t INA228_CONFIG_CONVDLY = 0x00U;
+const uint16_t INA228_CONFIG_CONVDLY = 0x00U; // 0:140us 1:204us
 
 const uint16_t INA228_CONFIG_TEMPCOMP = 0x00U; // 温度補正無効
 
@@ -151,6 +151,7 @@ uint32_t INA228_read_3byte(uint8_t reg)
     //	2回目以降は下位ビットを上位にずらして、新しく来たものを下位ビットに埋める
     ret = (ret << 8) | Wire.read();
   }
+  ret = ret >> 4;
   return ret;
 }
 
