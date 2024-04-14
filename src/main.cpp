@@ -13,38 +13,46 @@ const uint8_t I2C_SDA = 20; // GPIO20
 const uint8_t ADDRES_OLED = 0x3C;
 const uint8_t ADDRES_INA228 = 0x40;
 
-// -------------------------------------------------------------------------------
 //	シャント抵抗値
 const uint8_t ShuntR = 2; // 単位はmohm（ミリオーム）
-// -------------------------------------------------------------------------------
+
 //	INA228 レジスター値
 //	コンフィグ設定値は16bit値らしいので2byteに揃える
-// -------------------------------------------------------------------------------
+
 // 00h ConfigurationRegister
 //	default : 0B:00000000 00000000 0x:0h
-// -------------------------------------------------------------------------------
 const uint16_t INA228_CONFIG = 0x00U;
+
 /*Reset Bit. Setting this bit to '1' generates a system reset that is the
 same as power-on reset.
 Resets all registers to default values.
 0h = Normal Operation
 1h = System Reset sets registers to default values
 This bit self-clears.*/
-// -------------------------------------------------------------------------------
-
 const uint16_t INA228_CONFIG_RESET = 0x00U; // Reset
 
+/*Resets the contents of accumulation registers ENERGY andCHARGE to 0
+0h = Normal Operation
+1h = Clears registers to default values for ENERGY and CHARGE registers*/
 const uint16_t INA228_CONFIG_RSTACC = 0x00U;
 
+/*  Sets the Delay for initial ADC conversion in steps of 2 ms.
+0h = 0 s
+1h = 2 ms
+FFh = 510 ms*/
 const uint16_t INA228_CONFIG_CONVDLY = 0x00U; // 0:140us 1:204us
 
-const uint16_t INA228_CONFIG_TEMPCOMP = 0x00U; // 温度補正無効
+/*Enables temperature compensation of an external shunt
+0h = Shunt Temperature Compensation Disabled
+1h = Shunt Temperature Compensation Enabled*/
+const uint16_t INA228_CONFIG_TEMPCOMP = 0x00U;
 
-const uint16_t INA228_CONFIG_ADCRANCGE = 0x01U;
 // Shunt full scale range selection across IN+ and IN–.
 // 0h = ±163.84 mV
 // 1h = ± 40.96 mV
+const uint16_t INA228_CONFIG_ADCRANCGE = 0x01U;
 
+// Reserved. Always reads 0.
 const uint16_t INA228_CONFIG_RESERVED = 0x00U;
 // -----------------------------------------------
 // AVGBit Settings 平均値モードのサンプル数 D11-D9 << 9
