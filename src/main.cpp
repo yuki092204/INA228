@@ -151,6 +151,7 @@ uint32_t INA228_read_3byte(uint8_t reg)
     //	2回目以降は下位ビットを上位にずらして、新しく来たものを下位ビットに埋める
     ret = (ret << 8) | Wire.read();
   }
+  ret = ret >> 4;
   return ret;
 }
 
