@@ -20,10 +20,17 @@ const uint8_t ShuntR = 2; // 単位はmohm（ミリオーム）
 //	INA228 レジスター値
 //	コンフィグ設定値は16bit値らしいので2byteに揃える
 // -------------------------------------------------------------------------------
-// ---------------------------------------------------
 // 00h ConfigurationRegister
-//	default : 0B:01000001 00100111 0x:4127h
+//	default : 0B:00000000 00000000 0x:0h
+// -------------------------------------------------------------------------------
 const uint16_t INA228_CONFIG = 0x00U;
+/*Reset Bit. Setting this bit to '1' generates a system reset that is the
+same as power-on reset.
+Resets all registers to default values.
+0h = Normal Operation
+1h = System Reset sets registers to default values
+This bit self-clears.*/
+// -------------------------------------------------------------------------------
 
 const uint16_t INA228_CONFIG_RESET = 0x00U; // Reset
 
@@ -33,7 +40,10 @@ const uint16_t INA228_CONFIG_CONVDLY = 0x00U; // 0:140us 1:204us
 
 const uint16_t INA228_CONFIG_TEMPCOMP = 0x00U; // 温度補正無効
 
-const uint16_t INA228_CONFIG_ADCRANCGE = 0x01U; // 0:40.96mV 1:10.24mV
+const uint16_t INA228_CONFIG_ADCRANCGE = 0x01U;
+// Shunt full scale range selection across IN+ and IN–.
+// 0h = ±163.84 mV
+// 1h = ± 40.96 mV
 
 const uint16_t INA228_CONFIG_RESERVED = 0x00U;
 // -----------------------------------------------
