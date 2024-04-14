@@ -232,12 +232,11 @@ void loop()
   float busVoltage;
   float currentAmps;
 
-  // shuntVoltage = INA228_read_3byte(INA228_CURRENT) * 0.15625; // 2.5 : ShuntLSB unit 2.5uV to cf
+  // Low レンジでは 40.96mV / 2^19 / 0.002=0.0390625mA となり読み値に 0.0390625 をかけると mA の直読になります
   currentAmps = INA228_read_3byte(INA228_CURRENT) * 0.0390625; // mA
-  // shuntCurrentAmps = shuntVoltage / ShuntR;            // mA
 
-  busVoltage = INA228_read_3byte(INA228_VBUS) * 0.1953125; // 1.25 : BusLSB unit 1.25mV to cf
-  // currentAmps = INA226_read(INA226_CURRENT);    // mA
+  // 1LSB の 0.1953125 をかけると mV の直読になります
+  busVoltage = INA228_read_3byte(INA228_VBUS) * 0.1953125; // mV
 
   Serial.print("BusVoltage: ");
   Serial.print(busVoltage);
