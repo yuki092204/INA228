@@ -244,7 +244,7 @@ void loop()
   Serial.println(" mV");
   Serial.print("CurrentAmps: ");
   Serial.print(currentAmps);
-  Serial.println(" mA");
+  Serial.println(" mA"); //
 
   delay(333);
 }
