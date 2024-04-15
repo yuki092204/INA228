@@ -10,98 +10,147 @@ const uint32_t I2C_Normal = 100000UL; // I2C 周波数
 const uint8_t I2C_SCL = 21; // GPIO21
 const uint8_t I2C_SDA = 20; // GPIO20
 
-const uint8_t ADDRES_OLED = 0x3C;
+// INA228 I2C Address　本体の設定によって変わる
 const uint8_t ADDRES_INA228 = 0x40;
 
-// -------------------------------------------------------------------------------
 //	シャント抵抗値
 const uint8_t ShuntR = 2; // 単位はmohm（ミリオーム）
-// -------------------------------------------------------------------------------
-//	INA228 レジスター値
+
+//	以下　INA228 レジスター値の設定
 //	コンフィグ設定値は16bit値らしいので2byteに揃える
-// -------------------------------------------------------------------------------
-// ---------------------------------------------------
-// 00h ConfigurationRegister
-//	default : 0B:01000001 00100111 0x:4127h
+// https://strawberry-linux.com/pub/ina228.pdf (INA228のデータシート）を参照
+
+// Configuration (CONFIG) Register (Address = 0h) [reset = 0h]
 const uint16_t INA228_CONFIG = 0x00U;
 
+/*Reset Bit. Setting this bit to '1' generates a system reset that is the
+same as power-on reset.
+Resets all registers to default values.
+0h = Normal Operation
+1h = System Reset sets registers to default values
+This bit self-clears.*/
 const uint16_t INA228_CONFIG_RESET = 0x00U; // Reset
 
+/*Resets the contents of accumulation registers ENERGY andCHARGE to 0
+0h = Normal Operation
+1h = Clears registers to default values for ENERGY and CHARGE registers*/
 const uint16_t INA228_CONFIG_RSTACC = 0x00U;
 
+/*  Sets the Delay for initial ADC conversion in steps of 2 ms.
+0h = 0 s
+1h = 2 ms
+FFh = 510 ms*/
 const uint16_t INA228_CONFIG_CONVDLY = 0x00U; // 0:140us 1:204us
 
-const uint16_t INA228_CONFIG_TEMPCOMP = 0x00U; // 温度補正無効
+/*Enables temperature compensation of an external shunt
+0h = Shunt Temperature Compensation Disabled
+1h = Shunt Temperature Compensation Enabled*/
+const uint16_t INA228_CONFIG_TEMPCOMP = 0x00U;
 
-const uint16_t INA228_CONFIG_ADCRANCGE = 0x01U; // 0:40.96mV 1:10.24mV
+// Shunt full scale range selection across IN+ and IN–.
+// 0h = ±163.84 mV
+// 1h = ± 40.96 mV
+const uint16_t INA228_CONFIG_ADCRANCGE = 0x00U;
 
+// Reserved. Always reads 0.
 const uint16_t INA228_CONFIG_RESERVED = 0x00U;
-// -----------------------------------------------
-// AVGBit Settings 平均値モードのサンプル数 D11-D9 << 9
-// const uint16_t INA226_CONFIG_AVG = 0x0000U; // default 1@000  128@100 MAX:1024@111
-// const uint16_t INA228_CONFIG_AVG = 0x0002U; // 16回計測の平均
-// Bus VoltageConversionTime 電圧測定間隔 D8-D6  << 6
-// const uint16_t INA226_CONFIG_VCT = 0x0004U; // default:1.1ms@100
-// const uint16_t INA226_CONFIG_VCT = 0x0002U; // 16回計測するので332 μsに変更
-// ShuntVoltageConversionTime シャント抵抗電圧測定間隔 D5-D3 << 3
-// const uint16_t INA226_CONFIG_SVCT = 0x0004U; // default:1.1ms@100
-// const uint16_t INA226_CONFIG_SVCT = 0x0002U; // 16回計測するので332 μsに変更
-// ModeSettings 動作モード D2-D0 << 0
-// const uint16_t INA226_CONFIG_MODE = 0x0007U; // default:Shuntand Bus,Continuous@111
-// -----------------------------------------------
+
+// ADC Configuration (ADC_CONFIG) Register (Address = 1h) [reset = FB68h]
 const uint16_t INA228_ADC_CONFIG = 0x01;
 
+/*The user can set the MODE bits for continuous or triggered mode on
+bus voltage, shunt voltage or temperature measurement.
+0h = Shutdown
+1h = Triggered bus voltage, single shot
+2h = Triggered shunt voltage triggered, single shot
+3h = Triggered shunt voltage and bus voltage, single shot
+4h = Triggered temperature, single shot
+5h = Triggered temperature and bus voltage, single shot
+6h = Triggered temperature and shunt voltage, single shot
+7h = Triggered bus voltage, shunt voltage and temperature, single
+shot
+8h = Shutdown
+9h = Continuous bus voltage only
+Ah = Continuous shunt voltage only
+Bh = Continuous shunt and bus voltage
+Ch = Continuous temperature only
+Dh = Continuous bus voltage and temperature
+Eh = Continuous temperature and shunt voltage
+Fh = Continuous bus, shunt voltage and temperature*/
 const uint16_t INA228_ADC_CONFIG_MODE = 0x000FU;
 
+/*Sets the conversion time of the bus voltage measurement:
+0h = 50 µs
+1h = 84 µs
+2h = 150 µs
+3h = 280 µs
+4h = 540 µs
+5h = 1052 µs
+6h = 2074 µs
+7h = 4120 µs*/
 const uint16_t INA228_ADC_CONFIG_VBUSCT = 0x0005U;
 
+/*Sets the conversion time of the shunt voltage measurement:
+0h = 50 µs
+1h = 84 µs
+2h = 150 µs
+3h = 280 µs
+4h = 540 µs
+5h = 1052 µs
+6h = 2074 µs
+7h = 4120 µs*/
 const uint16_t INA228_ADC_CONFIG_VSHCT = 0x0005U;
 
+/*Sets the conversion time of the temperature measurement:
+0h = 50 µs
+1h = 84 µs
+2h = 150 µs
+3h = 280 µs
+4h = 540 µs
+5h = 1052 µs
+6h = 2074 µs
+7h = 4120 µs
+*/
 const uint16_t INA228_ADC_CONFIG_VTCT = 0x0005U;
 
+/*Selects ADC sample averaging count. The averaging setting applies
+to all active inputs.
+When >0h, the output registers are updated after the averaging has
+completed.
+0h = 1
+1h = 4
+2h = 16
+3h = 64
+4h = 128
+5h = 256
+6h = 512
+7h = 1024
+*/
 const uint16_t INA228_ADC_CONFIG_AVG = 0x0002U;
 
+// Shunt Calibration (SHUNT_CAL) Register (Address = 2h) [reset = 1000h]
 const uint16_t INA228_SHUNT_CAL = 0x02;
 
-// ---------------------------------------------------
-// 01h ShuntVoltageRegister (ReadOnly)
-//	0h と出るけど固定 8000 (1F40h)
+// Shunt Voltage Measurement (VSHUNT) Register (Address = 4h) [reset = 0h]
 const uint32_t INA228_VSHUNT = 0x04;
-// ---------------------------------------------------
-// 02h Bus VoltageRegister (ReadOnly)
-//	0h と出るけど固定 1.25mV / bit = 9584 (2570h)
+
+// Bus Voltage Measurement (VBUS) Register (Address = 5h) [reset = 0h]
 const uint8_t INA228_VBUS = 0x05;
 
+// Temperature Measurement (DIETEMP) Register (Address = 6h) [reset = 0h]
 const uint16_t INA228_DIETEMP = 0x06;
 
+// Current Result (CURRENT) Register (Address = 7h) [reset = 0h]
 const uint32_t INA228_CURRENT = 0x07;
-// ---------------------------------------------------
-// 03h PowerRegister (ReadOnly)
-//	0h と出るけど固定 Power = CurrentRegister * VoltageRegister / 20000 = 4792 (12B8h)
+
+// Power Result (POWER) Register (Address = 8h) [reset = 0h]
 const uint32_t INA228_POWER = 0x08;
-// ---------------------------------------------------
-// 04h CurrentRegister (ReadOnly)
-//	0h と出るけど固定 10000 (2710h)
-// const uint8_t INA226_CURRENT = 0x07;
-// ---------------------------------------------------
-// FEh ManufacturerID Register (ReadOnly)
+
+// Manufacturer ID (MANUFACTURER_ID) Register (Address = 3Eh) [reset = 5449h]
 const uint16_t INA228_MANU_ID = 0x3E;
-// ---------------------------------------------------
-// FFh Die ID Register (ReadOnly)
+
+// Device ID (DEVICE_ID) Register (Address = 3Fh) [reset = 2280h]
 const uint16_t INA228_DIE_ID = 0x3F;
-// ---------------------------------------------------
-
-// -------------------------------------------------------------------------------
-// #include <Adafruit_GFX.h>
-// #include <Adafruit_SSD1306.h>
-
-// const uint8_t SCREEN_WIDTH = 128; // OLED display width, in pixels
-// const uint8_t SCREEN_HEIGHT = 64; // OLED display width, in pixels
-//  Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-// const int8_t OLED_RESET = -1;
-
-// Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET, I2C_Freq, I2C_Normal);
-//  -------------------------------------------------------------------------------
 
 // レジスタ書き込み関数
 void INA228_write(uint8_t reg, uint16_t val)
@@ -114,7 +163,7 @@ void INA228_write(uint8_t reg, uint16_t val)
   Wire.endTransmission();
 }
 
-// 読み込み　2byte
+// レジスタ読み込み関数　2byte ver
 uint32_t INA228_read_2byte(uint8_t reg)
 {
   uint32_t ret = 0;
@@ -134,7 +183,7 @@ uint32_t INA228_read_2byte(uint8_t reg)
   return ret;
 }
 
-// 読み込み　3byte
+// レジスタ読み込み関数　3byte ver
 uint32_t INA228_read_3byte(uint8_t reg)
 {
   uint32_t ret = 0;
@@ -151,7 +200,7 @@ uint32_t INA228_read_3byte(uint8_t reg)
     //	2回目以降は下位ビットを上位にずらして、新しく来たものを下位ビットに埋める
     ret = (ret << 8) | Wire.read();
   }
-  ret = ret >> 4;
+  ret = ret >> 4; // 24bitのデータを20bitに変換(下位4bitは不要)
   return ret;
 }
 
@@ -177,72 +226,6 @@ void setup()
   uint16_t adc_config_ina = 0x0000U; // ベースビット 0B0000000000000000
   adc_config_ina = adc_config_ina | (INA228_ADC_CONFIG_MODE) << 12 | (INA228_ADC_CONFIG_VBUSCT) << 9 | (INA228_ADC_CONFIG_VSHCT) << 6 | (INA228_ADC_CONFIG_VTCT) << 3 | (INA228_ADC_CONFIG_AVG);
   INA228_write(INA228_ADC_CONFIG, adc_config_ina);
-  // キャリブレーション書き込み
-  //	5120 : VAOhm order ((0.0000025V x 2048) / 0.001A ) * 1000(to milli ohm at ShuntR unit order)
-  // 　キャリブレーション書き込み
-  //
-  // int Max_Expected_Current = 1000; // 1A
-  // float CURRENT_LSB = 0.0390625;   // 40.96mV / 2^19 / 0.002=0.0390625mA
-  // SHUNT_CAL = 13107.2 * 10 ^ 6 * CURRENT_LSB * ShuntR * 4;
-  // INA226_write(INA228_CALIB, (uint16_t)round(5120 / ShuntR)); // 5120 = 2.5 * 2048
-
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  //	if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3D))
-  /*if (!display.begin(SSD1306_SWITCHCAPVCC, ADDRES_OLED))
-  { // Address 0x3D for 128x64
-    Serial.println(F("SSD1306 allocation failed"));
-    for (;;)
-      ; // Don't proceed, loop forever
-  }
-  display.clearDisplay();
-  display.display();
-
-  delay(5000);
-
-  display.setCursor(0, 0);
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.println("-- Serial monitor --");
-  display.println(" display under here.");
-
-  // レジスタ値の確認用
-  display.print(INA228_read_2byte(INA228_CONFIG));
-  display.print(" ");
-  display.print(INA228_read_3byte(INA226_SHUNTV));
-  display.print(" ");
-  display.print(INA228_read_3byte(INA226_BUSV));
-  display.print(" ");
-  display.print(INA228_read_3byte(INA226_POWER));
-  display.println("");
-
-  display.print(INA228_read_3byte(INA228_CURRENT));
-  display.print(" ");
-  /*display.print(INA226_read(INA228_CALIB));
-  display.print(" ");
-  display.print(INA226_read(INA226_MASK));
-  display.print(" ");
-  display.print(INA226_read(INA226_ALERTL));
-  display.println("");
-
-  display.print(INA226_read(INA226_MANU_ID));
-  display.print(" ");
-  display.print(INA226_read(INA226_DIE_ID));
-  display.print(" ");
-
-  display.display();
-
-  delay(5000);
-
-  display.clearDisplay();
-  display.display();
-
-  display.setCursor(0, 0);
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.println("-- Serial monitor --");
-  display.println(" display under here.");
-
-  display.display();*/
 }
 
 void loop()
@@ -287,6 +270,13 @@ void loop()
   display.print(currentAmps); // INA228出力値
   display.println(" mA");
 
+  display.display();*/
+  Serial.print("BusVoltage: ");
+  Serial.print(busVoltage);
+  Serial.println(" mV");
+  Serial.print("CurrentAmps: ");
+  Serial.print(currentAmps);
+  Serial.println(" mA");
 
   delay(333);
 }
