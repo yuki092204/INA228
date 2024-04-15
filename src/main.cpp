@@ -235,8 +235,8 @@ void loop()
 
   // 1LSB は 163.84mV / 2^19 / 0.002=0.15625mA となり読み値に 0.15625 をかけると mA の直読になります。
   currentAmps = INA228_read_3byte(INA228_CURRENT) * 0.15625; // mA
-  // 。1LSB の 0.1953125 をかけると mV の直読になります
-  busVoltage = INA228_read_3byte(INA228_VBUS) * 0.1953125; // mV
+
+  busVoltage = INA228_read_3byte(INA228_VBUS) * 0.1953125; //
 
   Serial.print("BusVoltage: ");
   Serial.print(busVoltage);
