@@ -240,37 +240,6 @@ void loop()
   busVoltage = INA228_read_3byte(INA228_VBUS) * 0.1953125; // 1.25 : BusLSB unit 1.25mV to cf
   // currentAmps = INA226_read(INA226_CURRENT);    // mA
 
-  // 下までいったら消してしまう
-  /*if (display.getCursorY() >= 64)
-  {
-    display.setCursor(0, 16);
-    display.writeFillRect(0, 15, 127, 63, BLACK);
-    display.display();
-  }
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-
-  display.println("");
-
-  display.print("Shunt V: ");
-  display.print(shuntVoltage); // シャント電圧
-  display.println(" mV");
-
-  display.print("Bus V: ");
-  display.print(busVoltage); // バス電圧
-  display.println(" mV");
-
-  display.println("");
-
-  display.print("ShuntLSBA: ");
-  display.print(shuntCurrentAmps); // 計算値
-  display.println(" mA");
-
-  display.print("Current A: ");
-  display.print(currentAmps); // INA228出力値
-  display.println(" mA");
-
-  display.display();*/
   Serial.print("BusVoltage: ");
   Serial.print(busVoltage);
   Serial.println(" mV");
