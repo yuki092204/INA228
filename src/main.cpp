@@ -50,7 +50,7 @@ const uint16_t INA228_CONFIG_TEMPCOMP = 0x00U;
 // Shunt full scale range selection across IN+ and IN–.
 // 0h = ±163.84 mV
 // 1h = ± 40.96 mV
-const uint16_t INA228_CONFIG_ADCRANCGE = 0x01U;
+const uint16_t INA228_CONFIG_ADCRANCGE = 0x00U;
 
 // Reserved. Always reads 0.
 const uint16_t INA228_CONFIG_RESERVED = 0x00U;
