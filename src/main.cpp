@@ -209,7 +209,6 @@ void setup()
     while (!Serial)
         ;
 
-    //	Serial.begin(9600);
     Serial.begin(9600);
     // I2C開始
     Wire.begin();
