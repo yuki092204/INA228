@@ -155,96 +155,96 @@ const uint16_t INA228_DIE_ID = 0x3F;
 // レジスタ書き込み関数
 void INA228_write(uint8_t reg, uint16_t val)
 {
-  Wire.beginTransmission(ADDRES_INA228);
-  Wire.write(reg);
-  // I2Cは8bitづつ書き込みらしい
-  Wire.write(val >> 8);     // 上位ビット送信
-  Wire.write(val & 0x00ff); // ビットマスクして送信
-  Wire.endTransmission();
+    Wire.beginTransmission(ADDRES_INA228);
+    Wire.write(reg);
+    // I2Cは8bitづつ書き込みらしい
+    Wire.write(val >> 8);     // 上位ビット送信
+    Wire.write(val & 0x00ff); // ビットマスクして送信
+    Wire.endTransmission();
 }
 
 // レジスタ読み込み関数　2byte ver
 uint32_t INA228_read_2byte(uint8_t reg)
 {
-  uint32_t ret = 0;
-  // リクエストするレジスタをコール
-  Wire.beginTransmission(ADDRES_INA228);
-  Wire.write(reg);
-  Wire.endTransmission();
-  // 2バイトリクエスト
-  Wire.requestFrom((uint8_t)ADDRES_INA228, (uint8_t)2);
-  // 2バイト取り込み
-  while (Wire.available())
-  {
-    //	初回は0なので下位ビットに埋まる
-    //	2回目は下位ビットを上位にずらして、新しく来たものを下位ビットに埋める
-    ret = (ret << 8) | Wire.read();
-  }
-  return ret;
+    uint32_t ret = 0;
+    // リクエストするレジスタをコール
+    Wire.beginTransmission(ADDRES_INA228);
+    Wire.write(reg);
+    Wire.endTransmission();
+    // 2バイトリクエスト
+    Wire.requestFrom((uint8_t)ADDRES_INA228, (uint8_t)2);
+    // 2バイト取り込み
+    while (Wire.available())
+    {
+        //	初回は0なので下位ビットに埋まる
+        //	2回目は下位ビットを上位にずらして、新しく来たものを下位ビットに埋める
+        ret = (ret << 8) | Wire.read();
+    }
+    return ret;
 }
 
 // レジスタ読み込み関数　3byte ver
 uint32_t INA228_read_3byte(uint8_t reg)
 {
-  uint32_t ret = 0;
-  // リクエストするレジスタをコール
-  Wire.beginTransmission(ADDRES_INA228);
-  Wire.write(reg);
-  Wire.endTransmission();
-  // 3バイトリクエスト
-  Wire.requestFrom((uint8_t)ADDRES_INA228, (uint8_t)3);
-  // 3バイト取り込み
-  while (Wire.available())
-  {
-    //	初回は0なので下位ビットに埋まる
-    //	2回目以降は下位ビットを上位にずらして、新しく来たものを下位ビットに埋める
-    ret = (ret << 8) | Wire.read();
-  }
-  ret = ret >> 4; // 24bitのデータを20bitに変換(下位4bitは不要)
-  return ret;
+    uint32_t ret = 0;
+    // リクエストするレジスタをコール
+    Wire.beginTransmission(ADDRES_INA228);
+    Wire.write(reg);
+    Wire.endTransmission();
+    // 3バイトリクエスト
+    Wire.requestFrom((uint8_t)ADDRES_INA228, (uint8_t)3);
+    // 3バイト取り込み
+    while (Wire.available())
+    {
+        //	初回は0なので下位ビットに埋まる
+        //	2回目以降は下位ビットを上位にずらして、新しく来たものを下位ビットに埋める
+        ret = (ret << 8) | Wire.read();
+    }
+    ret = ret >> 4; // 24bitのデータを20bitに変換(下位4bitは不要)
+    return ret;
 }
 
 void setup()
 {
-  while (!Serial)
-    ;
+    while (!Serial)
+        ;
 
-  //	Serial.begin(9600);
-  Serial.begin(9600);
-  // I2C開始
-  Wire.begin();
+    //	Serial.begin(9600);
+    Serial.begin(9600);
+    // I2C開始
+    Wire.begin();
 
-  // 適度にディレイ
-  delay(1000);
+    // 適度にディレイ
+    delay(1000);
 
-  // INA226 初期設定
-  uint16_t config_ina = 0x0000U; // ベースビット 0B0000000000000000
-  config_ina = config_ina | (INA228_CONFIG_RESET) << 15 | (INA228_CONFIG_RSTACC) << 14 | (INA228_CONFIG_CONVDLY) << 6 | (INA228_CONFIG_TEMPCOMP) << 5 | (INA228_CONFIG_ADCRANCGE) << 4 | (INA228_CONFIG_RESERVED);
-  // config書き込み
-  INA228_write(INA228_CONFIG, config_ina);
-  // ADC_CONFIG書き込み
-  uint16_t adc_config_ina = 0x0000U; // ベースビット 0B0000000000000000
-  adc_config_ina = adc_config_ina | (INA228_ADC_CONFIG_MODE) << 12 | (INA228_ADC_CONFIG_VBUSCT) << 9 | (INA228_ADC_CONFIG_VSHCT) << 6 | (INA228_ADC_CONFIG_VTCT) << 3 | (INA228_ADC_CONFIG_AVG);
-  INA228_write(INA228_ADC_CONFIG, adc_config_ina);
+    // INA226 初期設定
+    uint16_t config_ina = 0x0000U; // ベースビット 0B0000000000000000
+    config_ina = config_ina | (INA228_CONFIG_RESET) << 15 | (INA228_CONFIG_RSTACC) << 14 | (INA228_CONFIG_CONVDLY) << 6 | (INA228_CONFIG_TEMPCOMP) << 5 | (INA228_CONFIG_ADCRANCGE) << 4 | (INA228_CONFIG_RESERVED);
+    // config書き込み
+    INA228_write(INA228_CONFIG, config_ina);
+    // ADC_CONFIG書き込み
+    uint16_t adc_config_ina = 0x0000U; // ベースビット 0B0000000000000000
+    adc_config_ina = adc_config_ina | (INA228_ADC_CONFIG_MODE) << 12 | (INA228_ADC_CONFIG_VBUSCT) << 9 | (INA228_ADC_CONFIG_VSHCT) << 6 | (INA228_ADC_CONFIG_VTCT) << 3 | (INA228_ADC_CONFIG_AVG);
+    INA228_write(INA228_ADC_CONFIG, adc_config_ina);
 }
 
 void loop()
 {
-  float busVoltage;
-  float currentAmps;
+    float busVoltage;
+    float currentAmps;
 
-  // 1LSB は 163.84mV / 2^19 / 0.002=0.15625mA となり読み値に 0.15625 をかけると mA の直読になる
-  currentAmps = INA228_read_3byte(INA228_CURRENT) * 0.15625; // mA
+    // 1LSB は 163.84mV / 2^19 / 0.002=0.15625mA となり読み値に 0.15625 をかけると mA の直読になる
+    currentAmps = INA228_read_3byte(INA228_CURRENT) * 0.15625; // mA
 
-  // 1LSB の 0.1953125 をかけると mV の直読になる
-  busVoltage = INA228_read_3byte(INA228_VBUS) * 0.1953125; // mV
+    // 1LSB の 0.1953125 をかけると mV の直読になる
+    busVoltage = INA228_read_3byte(INA228_VBUS) * 0.1953125; // mV
 
-  Serial.print("BusVoltage: ");
-  Serial.print(busVoltage);
-  Serial.println(" mV");
-  Serial.print("CurrentAmps: ");
-  Serial.print(currentAmps);
-  Serial.println(" mA");
+    Serial.print("BusVoltage: ");
+    Serial.print(busVoltage);
+    Serial.println(" mV");
+    Serial.print("CurrentAmps: ");
+    Serial.print(currentAmps);
+    Serial.println(" mA");
 
-  delay(333);
+    delay(333);
 }
