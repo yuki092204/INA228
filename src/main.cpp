@@ -227,6 +227,7 @@ void setup()
     INA228_write(INA228_ADC_CONFIG, adc_config_ina);
 
     // OLEDを使う
+    // SSD1306 128x64 OLED
 }
 
 void loop()
