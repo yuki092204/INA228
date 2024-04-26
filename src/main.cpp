@@ -225,6 +225,9 @@ void setup()
     uint16_t adc_config_ina = 0x0000U; // ベースビット 0B0000000000000000
     adc_config_ina = adc_config_ina | (INA228_ADC_CONFIG_MODE) << 12 | (INA228_ADC_CONFIG_VBUSCT) << 9 | (INA228_ADC_CONFIG_VSHCT) << 6 | (INA228_ADC_CONFIG_VTCT) << 3 | (INA228_ADC_CONFIG_AVG);
     INA228_write(INA228_ADC_CONFIG, adc_config_ina);
+
+    // OLEDを使う
+    // SSD1306 128x64 OLED
 }
 
 void loop()
