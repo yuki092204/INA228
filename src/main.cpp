@@ -228,7 +228,6 @@ void setup()
 
     // monitorを追加
     // LCDを追加
-    // 画面をクリア
 }
 
 void loop()
